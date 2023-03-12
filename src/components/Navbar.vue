@@ -11,7 +11,7 @@
 <script>
 import AcmeLogo from '@/assets/images/AcmeLogo.png'
 export default {
-  name: 'NavigationBar',
+  name: 'NavbarComponent',
   data() {
     return {
       AcmeLogo: AcmeLogo,

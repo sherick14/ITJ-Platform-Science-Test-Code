@@ -1,22 +1,25 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="default-layout">
       <Navbar />
       <HelloWorld />
+      <Footer />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
 import Navbar from '@/components/Navbar.vue'
+import HelloWorld from './components/HelloWorld'
+import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
     Navbar,
+    HelloWorld,
+    Footer,
   },
 
   data: () => ({
@@ -24,3 +27,14 @@ export default {
   }),
 }
 </script>
+
+<style lang="scss">
+body,
+html {
+  overflow-x: hidden;
+}
+
+.default-layout {
+  min-height: 100vh;
+}
+</style>
