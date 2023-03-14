@@ -3,24 +3,16 @@
     <v-alert v-model="alert.status" type="info" variant="tonal" dismissible>
       {{ alert.text }}
     </v-alert>
-    <div class="text-body-1 text-md-subtitle-1">
-      <h1 class="text-h4 text-md-h2 font-weight-bold text-center">Assigns shipment destination</h1>
-      <p class="mt-10">
-        Optimize your logistics levels by efficiently assigning drivers to their delivery routes.
-        Upload your list of drivers in a .txt file separating with a line break for each driver. for
-        each driver. It is also necessary to upload your list of delivery addresses in a .txt file
-        with a line break for each driver. .txt file with a line break for each address.
-      </p>
-      <p>
-        <span class="font-weight-bold">Important:</span> the number of drivers must match the number
-        of delivery addresses.
-      </p>
-    </div>
+    <title-banner
+      :title="titleData.title"
+      :description="titleData.description"
+      :disclaimer="titleData.disclaimer"
+    />
 
     <v-row class="mt-10">
       <v-col cols="12" md="6" class="text-body-1 pr-md-16">
         <h2 class="text-h5 text-md-h4 font-weight-medium">Drivers</h2>
-        <p class="mt-2">upload a file with the names of your drivers</p>
+        <p class="mt-2">Upload a file with the names of your drivers</p>
         <v-file-input
           v-model="driversFile"
           accept=".txt"
@@ -37,7 +29,7 @@
 
       <v-col cols="12" md="6" class="text-body-1 pl-md-16">
         <h2 class="text-h5 text-md-h4 font-weight-medium">Shipment</h2>
-        <p class="mt-2">upload a file with you shipments</p>
+        <p class="mt-2">Upload a file with you shipments</p>
         <v-file-input
           v-model="shipmentsFile"
           accept=".txt"
@@ -60,20 +52,31 @@
 </template>
 
 <script>
+import TitleBanner from '@/components/TitleBanner.vue'
+
 export default {
   name: 'ShipmentsDestination',
+  components: {
+    TitleBanner,
+  },
 
   data: () => ({
-    driversFile: null,
-    shipmentsFile: null,
-    data: null,
-    scores: [],
-    results: [],
-    driverSuitability: null,
     alert: {
       status: false,
       text: '',
     },
+    titleData: {
+      title: 'Assigns shipment destination',
+      description:
+        'Optimize your logistics levels by efficiently assigning drivers to their delivery routes. Upload your list of drivers in a .txt file separating with a line break for each driver. for each driver. It is also necessary to upload your list of delivery addresses in a .txt file with a line break for each driver. .txt file with a line break for each address.',
+      disclaimer:
+        '1. the number of drivers must match the number of delivery addresses. 2. Clic calculate to download a .csv',
+    },
+    driversFile: null,
+    shipmentsFile: null,
+    scores: [],
+    results: [],
+    driverSuitability: null,
     drivers: {
       names: '',
       quantity: 0,
@@ -95,9 +98,6 @@ export default {
       let reader = new FileReader()
       //Read if drivers file is upload
       if (type === 'drivers') {
-        if (!this.driversFile) {
-          this.data = 'No File Chosen'
-        }
         reader.readAsText(this.driversFile)
         //take the info and convert in array when exist and \n or \r
         reader.onload = () => {
@@ -107,9 +107,6 @@ export default {
         }
       } else {
         //Read if shipments file is upload
-        if (!this.shipmentsFile) {
-          this.data = 'No File Chosen'
-        }
         reader.readAsText(this.shipmentsFile)
         reader.onload = () => {
           this.shipments.names = reader.result
@@ -166,13 +163,16 @@ export default {
     },
     /**
      * Take the drivers' names and addresses and compare if they are a match
-     * @param name - receives the address name in a string variable
+     * (a match is the length of the shipment's destination street name shares
+     * any common factors (besides 1) with the length of the driver’s name)
+     * @param address - receives the address name in a string variable
      * @param name - receives the driver name in a string variable
      * @returns {Boolean} - returns true if have a match
      **/
-    matchFactor(address, name) {
+    matchCondition(address, name) {
       let addressMatches = []
       let nameMatches = []
+      //the index starts at 2 because we ignore if the match have a common factors with de number 1
       for (let i = 2; i <= address; i++) {
         if (address % i === 0) {
           addressMatches.push(i)
@@ -208,7 +208,7 @@ export default {
       const objUrl = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.setAttribute('href', objUrl)
-      link.setAttribute('download', 'File.csv')
+      link.setAttribute('download', 'Results.csv')
       document.querySelector('body').append(link)
       link.click()
     },
@@ -230,7 +230,7 @@ export default {
           )
           // If matches exists the SS is increased by 50% above the base SS.
           let driverHasMatches = this.drivers.array.map((driver) =>
-            this.matchFactor(address.length, driver.length)
+            this.matchCondition(address.length, driver.length)
           )
           this.driverSuitability = this.driverSuitability.map((suitability, index) => {
             if (driverHasMatches[index]) {
@@ -245,7 +245,7 @@ export default {
           this.driverSuitability = this.drivers.array.map((driver) => this.countConsonants(driver))
           // If matches exists the SS is increased by 50% above the base SS.
           let driverHasMatches = this.drivers.array.map((driver) =>
-            this.matchFactor(address.length, driver.length)
+            this.matchCondition(address.length, driver.length)
           )
           this.driverSuitability = this.driverSuitability.map((suitability, index) => {
             if (driverHasMatches[index]) {
