@@ -1,6 +1,6 @@
 <template>
   <v-container class="my-16">
-    <v-alert type="info" v-model="alert.status" variant="tonal" dismissible>
+    <v-alert v-model="alert.status" type="info" variant="tonal" dismissible>
       {{ alert.text }}
     </v-alert>
     <div class="text-body-1 text-md-subtitle-1">
