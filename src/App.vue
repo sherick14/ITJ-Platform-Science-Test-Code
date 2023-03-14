@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="default-layout">
       <Navbar />
-      <HelloWorld />
+      <Shipment />
       <Footer />
     </v-main>
   </v-app>
@@ -10,7 +10,7 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue'
-import HelloWorld from './components/HelloWorld'
+import Shipment from '@/components/Shipments'
 import Footer from '@/components/Footer.vue'
 
 export default {
@@ -18,7 +18,7 @@ export default {
 
   components: {
     Navbar,
-    HelloWorld,
+    Shipment,
     Footer,
   },
 
@@ -29,11 +29,6 @@ export default {
 </script>
 
 <style lang="scss">
-body,
-html {
-  overflow-x: hidden;
-}
-
 .default-layout {
   min-height: 100vh;
 }

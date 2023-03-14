@@ -1,6 +1,6 @@
 <template>
   <v-footer absolute color="black test">
-    <v-row class="white--text">
+    <v-row class="text-body-2 text-md-subtitle-1 white--text">
       <v-col cols="8">
         <label>© All rights reserved 2023 / ACME INC</label>
       </v-col>
