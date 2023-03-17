@@ -260,17 +260,17 @@ export default {
       })
 
       while (this.results.length !== this.drivers.array.length) {
-        let scores_max = this.scores.map((s) => Math.max(...s.score))
-        let max_score = Math.max(...scores_max)
-        let index_scores_max = scores_max.indexOf(max_score)
-        let index_driver = this.scores[index_scores_max].score.indexOf(max_score)
-        let address = this.scores[index_scores_max].address
-        let driver = this.drivers.array[index_driver]
+        let scoresMax = this.scores.map((s) => Math.max(...s.score))
+        let maxScore = Math.max(...scoresMax)
+        let indexScoresMax = scoresMax.indexOf(maxScore)
+        let driverIndex = this.scores[indexScoresMax].score.indexOf(maxScore)
+        let address = this.scores[indexScoresMax].address
+        let driver = this.drivers.array[driverIndex]
 
-        this.results.push({ driver, address, ss: max_score })
-        this.scores.splice(index_scores_max, 1)
+        this.results.push({ driver, address, ss: maxScore })
+        this.scores.splice(indexScoresMax, 1)
         this.scores.forEach((s) => {
-          s.score[index_driver] = 0
+          s.score[driverIndex] = 0
         })
       }
 
